@@ -19,10 +19,10 @@ public class EmployeeController {
 	EmployeeRepository employeeRepository;
 	
 	
-	@PostMapping("/employees")
+	@PostMapping("/addEmployee")
 	public Response addEmployee(@RequestBody Employee employee) {
 		employeeRepository.save(employee);
-		return new Response(employee.getId()+"inserted",Boolean.TRUE);
+		return new Response(employee.getId()+" inserted",Boolean.TRUE);
 	}
 	
 	@GetMapping("/getEmployees")
