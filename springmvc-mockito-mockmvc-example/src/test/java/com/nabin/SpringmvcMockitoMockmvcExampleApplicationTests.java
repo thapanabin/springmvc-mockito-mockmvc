@@ -1,4 +1,5 @@
 package com.nabin;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -20,8 +21,8 @@ import com.nabin.spring.mockito.model.Employee;
 import com.nabin.spring.mockito.model.Response;
 
 
-@SpringBootTest
 @RunWith(SpringRunner.class)
+@SpringBootTest
 public class SpringmvcMockitoMockmvcExampleApplicationTests {
 
 	private MockMvc mockMvc;
@@ -42,8 +43,16 @@ public class SpringmvcMockitoMockmvcExampleApplicationTests {
 		emp.setName("Nabin");
 		emp.setDept("IT");
 		String jsonRequest = om.writeValueAsString(emp);
-		MvcResult mvcResult = mockMvc.perform(post("/addEmployee").content(jsonRequest).contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk()).andReturn();
+		MvcResult mvcResult = mockMvc.perform(post("/addEmployee").content(jsonRequest).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
 		String resultContent = mvcResult.getResponse().getContentAsString();
+		Response response = om.readValue(resultContent, Response.class);
+		Assert.assertTrue(response.isStatus() == Boolean.TRUE);
+	}
+	
+	@Test
+	public void getAllEmployeeTest() throws Exception {
+		MvcResult result = mockMvc.perform(get("/getEmployees").content(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk()).andReturn();
+		String resultContent = result.getResponse().getContentAsString();
 		Response response = om.readValue(resultContent, Response.class);
 		Assert.assertTrue(response.isStatus() == Boolean.TRUE);
 	}
